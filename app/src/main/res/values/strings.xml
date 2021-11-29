@@ -29,5 +29,5 @@
   -->
 
 <resources>
-  <string name="app_name">Content Provider To Do List</string>
+  <string name="app_name">Content Provider To Do List Client</string>
 </resources>

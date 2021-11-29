@@ -28,7 +28,7 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.contentprovidertodo.controller
+package com.raywenderlich.android.contentprovidertodoclient.controller
 
 import android.content.ContentValues
 import android.content.Context
@@ -41,15 +41,15 @@ import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
-import com.raywenderlich.android.contentprovidertodo.controller.provider.ToDoContract.CONTENT_PATH
-import com.raywenderlich.android.contentprovidertodo.controller.provider.ToDoContract.CONTENT_URI
-import com.raywenderlich.android.contentprovidertodo.controller.provider.ToDoContract.ROW_COUNT_URI
-import com.raywenderlich.android.contentprovidertodo.controller.provider.ToDoContract.ToDoTable.Columns.KEY_TODO_ID
-import com.raywenderlich.android.contentprovidertodo.controller.provider.ToDoContract.ToDoTable.Columns.KEY_TODO_IS_COMPLETED
-import com.raywenderlich.android.contentprovidertodo.controller.provider.ToDoContract.ToDoTable.Columns.KEY_TODO_NAME
-import com.raywenderlich.android.contentprovidertodo.model.ToDo
-import com.raywenderlich.android.contentprovidertodo.databinding.ToDoListItemBinding
-import com.raywenderlich.android.contentprovidertodo.databinding.DialogToDoItemBinding
+import com.raywenderlich.android.contentprovidertodoclient.controller.provider.ToDoContract.CONTENT_PATH
+import com.raywenderlich.android.contentprovidertodoclient.controller.provider.ToDoContract.CONTENT_URI
+import com.raywenderlich.android.contentprovidertodoclient.controller.provider.ToDoContract.ROW_COUNT_URI
+import com.raywenderlich.android.contentprovidertodoclient.controller.provider.ToDoContract.ToDoTable.Columns.KEY_TODO_ID
+import com.raywenderlich.android.contentprovidertodoclient.controller.provider.ToDoContract.ToDoTable.Columns.KEY_TODO_IS_COMPLETED
+import com.raywenderlich.android.contentprovidertodoclient.controller.provider.ToDoContract.ToDoTable.Columns.KEY_TODO_NAME
+import com.raywenderlich.android.contentprovidertodoclient.model.ToDo
+import com.raywenderlich.android.contentprovidertodoclient.databinding.ToDoListItemBinding
+import com.raywenderlich.android.contentprovidertodoclient.databinding.DialogToDoItemBinding
 
 class ToDoAdapter(private val context: Context) :
     RecyclerView.Adapter<ToDoAdapter.ViewHolder>() {

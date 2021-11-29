@@ -28,71 +28,49 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.contentprovidertodo.view
+package com.raywenderlich.android.contentprovidertodoclient.view
 
-
-import android.content.Intent
+import android.content.DialogInterface
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.Window
+import android.view.LayoutInflater
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import com.raywenderlich.android.contentprovidertodo.R
-
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.raywenderlich.android.contentprovidertodoclient.controller.ToDoAdapter
+import com.raywenderlich.android.contentprovidertodoclient.databinding.ActivityMainBinding
+import com.raywenderlich.android.contentprovidertodoclient.databinding.DialogToDoItemBinding
 
 /**
- * Splash Screen with the app icon and name at the center, this is also the launch screen and
- * opens up in fullscreen mode. Once launched it waits for 2 seconds after which it opens the
- * MainActivityOriginal
+ * Main Screen
  */
-class SplashActivity : AppCompatActivity() {
-
-  private lateinit var handler: Handler
-  private lateinit var runnable: Runnable
+class MainActivity : AppCompatActivity() {
+  lateinit private var binding: ActivityMainBinding
+  private var layoutManager: RecyclerView.LayoutManager? = null
+  private lateinit var toDoAdapter: ToDoAdapter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+    layoutManager = LinearLayoutManager(this)
+    binding.recyclerView.layoutManager = layoutManager
+    toDoAdapter = ToDoAdapter(this)
+    binding.recyclerView.adapter = toDoAdapter
 
-    makeFullScreen()
-
-    setContentView(R.layout.activity_splash)
-
-    // Using a handler to delay loading the MainActivityOriginal
-    handler = Handler(Looper.getMainLooper())
-    runnable = Runnable {
-
-      // Start activity
-      startActivity(Intent(this, MainActivity::class.java))
-
-      // Animate the loading of new activity
-      overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-
-      // Close this activity
-      finish()
-
+    binding.fab.setOnClickListener {
+      val dialog = AlertDialog.Builder(this)
+      dialog.setTitle("Add To Do Item")
+      val dialogToDoItemBinding = DialogToDoItemBinding.inflate(LayoutInflater.from(applicationContext))
+      dialog.setView(dialogToDoItemBinding.root)
+      dialog.setPositiveButton("Add") { _: DialogInterface, _: Int ->
+        if (dialogToDoItemBinding.edtToDoName.text.isNotEmpty()) {
+          toDoAdapter.insertToDo(dialogToDoItemBinding.edtToDoName.text.toString())
+        }
+      }
+      dialog.setNegativeButton("Cancel") { _: DialogInterface, _: Int ->
+      }
+      dialog.show()
     }
-    handler.postDelayed(runnable, 2000)
-  }
-
-  private fun makeFullScreen() {
-    // Remove Title
-    requestWindowFeature(Window.FEATURE_NO_TITLE)
-
-    // Make Fullscreen
-    WindowCompat.getInsetsController(window, window.decorView)
-      ?.hide(
-        WindowInsetsCompat.Type.statusBars() or
-            WindowInsetsCompat.Type.navigationBars()
-      )
-
-    // Hide the toolbar
-    supportActionBar?.hide()
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
-    handler.removeCallbacks(runnable)
   }
 }
