@@ -17,6 +17,7 @@ import com.raywenderlich.android.contentprovidertodo.controller.provider.ToDoCon
 import com.raywenderlich.android.contentprovidertodo.controller.provider.ToDoContract.ToDoTable.Columns.KEY_TODO_IS_COMPLETED
 import com.raywenderlich.android.contentprovidertodo.controller.provider.ToDoContract.ToDoTable.Columns.KEY_TODO_NAME
 import com.raywenderlich.android.contentprovidertodo.model.ToDo
+import java.lang.Long.parseLong
 
 class ToDoContentProvider : ContentProvider() {
     // 1
@@ -43,7 +44,10 @@ class ToDoContentProvider : ContentProvider() {
 
 
     override fun delete(uri: Uri, selection: String?, selectionArgs: Array<String>?): Int {
-        TODO("Implement this to handle requests to delete one or more rows")
+        selectionArgs?.get(0)?.let {
+            return db.delete(parseLong(it))
+        }
+        return 0
     }
 
 

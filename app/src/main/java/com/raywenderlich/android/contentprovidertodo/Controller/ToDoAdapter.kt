@@ -37,6 +37,8 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.raywenderlich.android.contentprovidertodo.controller.provider.ToDoContract.CONTENT_PATH
@@ -86,7 +88,24 @@ class ToDoAdapter(private val context: Context) :
 
     // Row by row, populate the RecyclerView
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // TODO: Add query here to get all items
+        val cursor = context.contentResolver.query(
+            Uri.parse(queryUri),
+            projection,
+            selectionClause,
+            selectionArgs, sortOrder
+        )
+
+        if (cursor != null) {
+            if (cursor.moveToPosition(position)) {
+                val toDoId = cursor.getLong(cursor.getColumnIndex(KEY_TODO_ID))
+                val toDoName = cursor.getString(cursor.getColumnIndex(KEY_TODO_NAME))
+                val toDoCompleted = cursor.getInt(cursor.getColumnIndex(KEY_TODO_IS_COMPLETED)) > 0
+                cursor.close()
+                val toDo = ToDo(toDoId, toDoName, toDoCompleted)
+                holder.bindViews(toDo)
+            }
+        }
+
     }
 
     //Insert a To-Do item from the ContentResolver
@@ -159,7 +178,10 @@ class ToDoAdapter(private val context: Context) :
 
         // Delete a To-Do item from the ContentResolver
         private fun deleteToDo(id: Long) {
-            // TODO: Populate selection args and call query to delete record
+            selectionArgs = arrayOf(id.toString())
+            context.contentResolver.delete(Uri.parse(queryUri), selectionClause, selectionArgs)
+            notifyDataSetChanged()
+            Toast.makeText(context, "Item deleted.", LENGTH_LONG).show()
         }
 
         // Edit an Item in the ContentResolver
